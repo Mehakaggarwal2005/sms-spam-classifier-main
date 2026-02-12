@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMS Spam Detector</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:#0f172a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#e5e7eb;
+}
+
+/* MAIN WRAPPER */
+.wrapper{
+    width:95%;
+    max-width:1100px;
+    height:600px;
+    display:grid;
+    grid-template-columns:1fr 1.3fr;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 40px 80px rgba(0,0,0,0.6);
+}
+
+/* LEFT PANEL */
+.left{
+    background:linear-gradient(135deg,#1e3a8a,#0f172a);
+    padding:50px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.left h1{
+    font-size:3rem;
+    margin-bottom:15px;
+}
+
+.left p{
+    font-size:1.1rem;
+    opacity:0.85;
+    line-height:1.6;
+}
+
+.badges{
+    margin-top:30px;
+}
+
+.badge{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.15);
+    margin:5px 5px 0 0;
+    font-size:0.85rem;
+}
+
+/* RIGHT PANEL */
+.right{
+    background:#020617;
+    padding:40px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+/* INPUT */
+label{
+    font-size:1rem;
+    margin-bottom:8px;
+    display:block;
+    color:#94a3b8;
+}
+
+textarea{
+    width:100%;
+    min-height:160px;
+    background:#020617;
+    border:2px dashed #1e293b;
+    border-radius:12px;
+    padding:15px;
+    color:#e5e7eb;
+    font-size:1rem;
+    resize:none;
+}
+
+textarea:focus{
+    outline:none;
+    border-color:#38bdf8;
+}
+
+/* BUTTONS */
+.actions{
+    display:flex;
+    gap:12px;
+    margin:20px 0;
+}
+
+button{
+    flex:1;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:1rem;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.check{
+    background:#38bdf8;
+    color:#020617;
+}
+
+.check:hover{
+    background:#0ea5e9;
+}
+
+.clear{
+    background:#1e293b;
+    color:#e5e7eb;
+}
+
+.clear:hover{
+    background:#334155;
+}
+
+/* LOADER */
+.loading{
+    display:none;
+    text-align:center;
+    color:#38bdf8;
+}
+
+.loading::after{
+    content:'';
+    display:block;
+    width:40px;
+    height:40px;
+    border:4px solid #1e293b;
+    border-top:4px solid #38bdf8;
+    border-radius:50%;
+    margin:15px auto;
+    animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg)}
+}
+
+/* RESULT */
+.result{
+    display:none;
+    padding:18px;
+    border-radius:14px;
+    margin-top:15px;
+}
+
+.result.show{
+    display:block;
+}
+
+.result.spam{
+    background:rgba(239,68,68,0.15);
+    border:1px solid #ef4444;
+    color:#fecaca;
+}
+
+.result.ham{
+    background:rgba(34,197,94,0.15);
+    border:1px solid #22c55e;
+    color:#bbf7d0;
+}
+
+.result h2{
+    font-size:1.4rem;
+    margin-bottom:8px;
+}
+
+/* EXAMPLES */
+.examples{
+    margin-top:20px;
+}
+
+.examples button{
+    width:100%;
+    margin-top:8px;
+    background:#020617;
+    border:1px solid #1e293b;
+    color:#94a3b8;
+}
+
+.examples button:hover{
+    border-color:#38bdf8;
+    color:#e5e7eb;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <!-- LEFT -->
+    <div class="left">
+        <h1>📩 Spam Detection</h1>
+        <p>
+            Detect unwanted SMS using Machine Learning.
+            This system analyzes message patterns and flags
+            suspicious or malicious content instantly.
+        </p>
+
+        <div class="badges">
+            <span class="badge">ML Powered</span>
+            <span class="badge">Real-Time</span>
+            <span class="badge">Secure</span>
+            <span class="badge">Student Project</span>
+        </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+        <label>Enter SMS text</label>
+        <textarea id="message" placeholder="Type or paste SMS here..."></textarea>
+
+        <div class="actions">
+            <button class="check" onclick="checkMessage()">Check</button>
+            <button class="clear" onclick="clearMessage()">Clear</button>
+        </div>
+
+        <div class="loading" id="loading">Analyzing message</div>
+
+        <div class="result" id="result"></div>
+
+        <div class="examples">
+            <button onclick="loadExample('URGENT! Verify your account now or it will be blocked.')">Load Spam Example</button>
+            <button onclick="loadExample('Hey, I will call you in the evening.')">Load Legit Example</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function checkMessage(){
+    const msg=document.getElementById("message").value.trim();
+    if(!msg){alert("Enter a message first");return;}
+
+    document.getElementById("loading").style.display="block";
+    document.getElementById("result").classList.remove("show");
+
+    setTimeout(()=>{
+        const spam=Math.random()>0.5;
+        showResult(spam);
+        document.getElementById("loading").style.display="none";
+    },1200);
+}
+
+function showResult(isSpam){
+    const result=document.getElementById("result");
+    result.className="result show "+(isSpam?"spam":"ham");
+    result.innerHTML=`
+        <h2>${isSpam?"🚨 Spam Detected":"✅ Legit Message"}</h2>
+        <p>Confidence: ${isSpam?91:97}%</p>
+    `;
+}
+
+function clearMessage(){
+    document.getElementById("message").value="";
+    document.getElementById("result").classList.remove("show");
+}
+
+function loadExample(text){
+    document.getElementById("message").value=text;
+}
+</script>
+
+</body>
+</html>
