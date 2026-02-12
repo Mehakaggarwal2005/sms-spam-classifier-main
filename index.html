@@ -26,7 +26,7 @@ body{
 .wrapper{
     width:95%;
     max-width:1100px;
-    height:600px;
+    min-height:600px;
     display:grid;
     grid-template-columns:1fr 1.3fr;
     border-radius:20px;
@@ -205,6 +205,136 @@ button{
 .examples button:hover{
     border-color:#38bdf8;
     color:#e5e7eb;
+}
+
+/* RESPONSIVE DESIGN */
+@media(max-width:768px){
+    .wrapper{
+        grid-template-columns:1fr;
+        min-height:auto;
+        margin:20px auto;
+    }
+
+    .left{
+        padding:40px 30px;
+    }
+
+    .left h1{
+        font-size:2.2rem;
+    }
+
+    .left p{
+        font-size:1rem;
+    }
+
+    .right{
+        padding:30px;
+    }
+
+    textarea{
+        min-height:120px;
+    }
+
+    button{
+        padding:12px;
+        font-size:0.95rem;
+    }
+
+    .result h2{
+        font-size:1.2rem;
+    }
+}
+
+@media(max-width:480px){
+    body{
+        min-height:auto;
+        padding:15px 0;
+    }
+
+    .wrapper{
+        width:100%;
+        border-radius:15px;
+        margin:20px auto;
+    }
+
+    .left{
+        padding:30px 20px;
+    }
+
+    .left h1{
+        font-size:1.8rem;
+        margin-bottom:12px;
+    }
+
+    .left p{
+        font-size:0.95rem;
+        line-height:1.5;
+    }
+
+    .badge{
+        padding:6px 12px;
+        font-size:0.75rem;
+        margin:4px 4px 0 0;
+    }
+
+    .right{
+        padding:20px;
+    }
+
+    label{
+        font-size:0.9rem;
+    }
+
+    textarea{
+        min-height:100px;
+        padding:12px;
+        font-size:0.95rem;
+    }
+
+    .actions{
+        flex-direction:column;
+        gap:10px;
+    }
+
+    button{
+        padding:12px;
+        font-size:0.9rem;
+    }
+
+    .result{
+        padding:14px;
+        margin-top:10px;
+    }
+
+    .result h2{
+        font-size:1.1rem;
+        margin-bottom:6px;
+    }
+
+    .result p{
+        font-size:0.9rem;
+    }
+
+    .examples button{
+        padding:12px;
+        font-size:0.9rem;
+        margin-top:6px;
+    }
+}
+
+@media(max-width:360px){
+    .left h1{
+        font-size:1.5rem;
+    }
+
+    .left p{
+        font-size:0.9rem;
+    }
+
+    .badge{
+        padding:5px 10px;
+        font-size:0.7rem;
+    }
 }
 </style>
 </head>

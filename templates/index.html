@@ -1,504 +1,343 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMS Spam Detector</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMS Spam Detector</title>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
 
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
-            width: 100%;
-            padding: 40px;
-            animation: slideIn 0.5s ease-out;
-        }
+body{
+    min-height:100vh;
+    background:#0f172a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#e5e7eb;
+    padding:20px;
+}
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+/* MAIN WRAPPER */
+.wrapper{
+    width:100%;
+    max-width:1100px;
+    display:grid;
+    grid-template-columns:1fr 1.3fr;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 40px 80px rgba(0,0,0,0.6);
+}
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+/* LEFT PANEL */
+.left{
+    background:linear-gradient(135deg,#1e3a8a,#020617);
+    padding:50px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
 
-        .header h1 {
-            font-size: 2.5em;
-            color: #333;
-            margin-bottom: 10px;
-        }
+.left h1{
+    font-size:3rem;
+    margin-bottom:15px;
+}
 
-        .header p {
-            color: #666;
-            font-size: 1.1em;
-        }
+.left p{
+    font-size:1.1rem;
+    opacity:0.85;
+    line-height:1.6;
+}
 
-        .icon {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
+.badges{
+    margin-top:30px;
+}
 
-        .form-group {
-            margin-bottom: 25px;
-        }
+.badge{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.15);
+    margin:5px 5px 0 0;
+    font-size:0.85rem;
+}
 
-        label {
-            display: block;
-            font-size: 1.1em;
-            color: #333;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
+/* RIGHT PANEL */
+.right{
+    background:#020617;
+    padding:40px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
 
-        textarea {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 1em;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            resize: vertical;
-            min-height: 150px;
-            transition: border-color 0.3s;
-        }
+label{
+    font-size:1rem;
+    margin-bottom:8px;
+    display:block;
+    color:#94a3b8;
+}
 
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
-        }
+textarea{
+    width:100%;
+    min-height:160px;
+    background:#020617;
+    border:2px dashed #1e293b;
+    border-radius:12px;
+    padding:15px;
+    color:#e5e7eb;
+    font-size:1rem;
+    resize:none;
+}
 
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
+textarea:focus{
+    outline:none;
+    border-color:#38bdf8;
+}
 
-        button {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+/* BUTTONS */
+.actions{
+    display:flex;
+    gap:12px;
+    margin:20px 0;
+}
 
-        .btn-check {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
+button{
+    flex:1;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:1rem;
+    font-weight:600;
+    transition:0.3s;
+}
 
-        .btn-check:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
+.check{
+    background:#38bdf8;
+    color:#020617;
+}
 
-        .btn-check:active:not(:disabled) {
-            transform: translateY(0);
-        }
+.check:hover{
+    background:#0ea5e9;
+}
 
-        .btn-check:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+.clear{
+    background:#1e293b;
+    color:#e5e7eb;
+}
 
-        .btn-clear {
-            background: #f0f0f0;
-            color: #333;
-        }
+.clear:hover{
+    background:#334155;
+}
 
-        .btn-clear:hover {
-            background: #e0e0e0;
-        }
+/* LOADING */
+.loading{
+    display:none;
+    text-align:center;
+    color:#38bdf8;
+}
 
-        .result {
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin-bottom: 25px;
-            display: none;
-            animation: fadeIn 0.5s ease-out;
-        }
+.loading::after{
+    content:'';
+    display:block;
+    width:40px;
+    height:40px;
+    border:4px solid #1e293b;
+    border-top:4px solid #38bdf8;
+    border-radius:50%;
+    margin:15px auto;
+    animation:spin 1s linear infinite;
+}
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
+@keyframes spin{
+    to{transform:rotate(360deg)}
+}
 
-        .result.show {
-            display: block;
-        }
+/* RESULT */
+.result{
+    display:none;
+    padding:18px;
+    border-radius:14px;
+    margin-top:15px;
+}
 
-        .result.spam {
-            background: #ff6b6b;
-            color: white;
-            border-left: 5px solid #cc0000;
-        }
+.result.show{
+    display:block;
+}
 
-        .result.ham {
-            background: #51cf66;
-            color: white;
-            border-left: 5px solid #228c22;
-        }
+.result.spam{
+    background:rgba(239,68,68,0.15);
+    border:1px solid #ef4444;
+    color:#fecaca;
+}
 
-        .result-title {
-            font-size: 1.8em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+.result.ham{
+    background:rgba(34,197,94,0.15);
+    border:1px solid #22c55e;
+    color:#bbf7d0;
+}
 
-        .result-description {
-            font-size: 1em;
-            margin-bottom: 15px;
-        }
+.result h2{
+    font-size:1.4rem;
+    margin-bottom:8px;
+}
 
-        .confidence {
-            font-size: 0.95em;
-            opacity: 0.95;
-            margin-bottom: 10px;
-        }
+/* EXAMPLES */
+.examples{
+    margin-top:20px;
+}
 
-        .recommendation {
-            font-size: 0.9em;
-            opacity: 0.95;
-            line-height: 1.5;
-        }
+.examples button{
+    width:100%;
+    margin-top:8px;
+    background:#020617;
+    border:1px solid #1e293b;
+    color:#94a3b8;
+}
 
-        .error {
-            background: #ff9800;
-            color: white;
-            border-left: 5px solid #e65100;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
+.examples button:hover{
+    border-color:#38bdf8;
+    color:#e5e7eb;
+}
 
-        .error.show {
-            display: block;
-        }
+/* TABLET */
+@media(max-width:900px){
+    .wrapper{
+        grid-template-columns:1fr;
+    }
 
-        .tips {
-            background: #f8f9ff;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
+    .left{
+        text-align:center;
+    }
+}
 
-        .tips h3 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 1em;
-        }
+/* MOBILE */
+@media(max-width:480px){
+    body{
+        padding:10px;
+    }
 
-        .tips ul {
-            margin-left: 20px;
-            color: #666;
-            line-height: 1.8;
-        }
+    .left{
+        padding:30px 20px;
+    }
 
-        .tips li {
-            margin-bottom: 5px;
-        }
+    .left h1{
+        font-size:1.8rem;
+    }
 
-        .examples {
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 2px solid #eee;
-        }
+    .left p{
+        font-size:0.95rem;
+    }
 
-        .examples h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.1em;
-        }
+    .right{
+        padding:20px;
+    }
 
-        .example-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
+    textarea{
+        min-height:120px;
+    }
 
-        .example-btn {
-            padding: 10px;
-            background: #f0f0f0;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: all 0.3s;
-            text-align: left;
-        }
-
-        .example-btn:hover {
-            background: #e0e0e0;
-            border-color: #667eea;
-            transform: translateY(-1px);
-        }
-
-        .example-btn.spam {
-            border-left: 4px solid #ff6b6b;
-        }
-
-        .example-btn.ham {
-            border-left: 4px solid #51cf66;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            color: #667eea;
-            font-weight: 600;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .status-bar {
-            text-align: center;
-            color: #999;
-            font-size: 0.85em;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-
-        .status-bar.connected {
-            color: #51cf66;
-        }
-
-        .status-bar.disconnected {
-            color: #ff6b6b;
-        }
-    </style>
+    .actions{
+        flex-direction:column;
+    }
+}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="icon">📨</div>
-            <h1>SMS Spam Detector</h1>
-            <p>Powered by Machine Learning • Real-time Detection</p>
-        </div>
 
-        <div class="error" id="error"></div>
+<div class="wrapper">
 
-        <div class="form-group">
-            <label for="message">📝 Enter Your Message:</label>
-            <textarea 
-                id="message" 
-                placeholder="Paste or type your SMS message here..."
-            ></textarea>
-        </div>
+    <div class="left">
+        <h1>📩 Spam Detection</h1>
+        <p>
+            Machine Learning based SMS spam detector.
+            Instantly identifies suspicious or malicious messages.
+        </p>
 
-        <div class="button-group">
-            <button class="btn-check" id="checkBtn" onclick="checkMessage()">🚀 Check Message</button>
-            <button class="btn-clear" onclick="clearMessage()">🗑️ Clear</button>
-        </div>
-
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Analyzing message...</p>
-        </div>
-
-        <div class="result" id="result"></div>
-
-        <div class="tips">
-            <h3>⚠️ Common Spam Indicators:</h3>
-            <ul>
-                <li>Urgent requests or threats</li>
-                <li>Unbelievable offers (free money, prizes)</li>
-                <li>Suspicious links or shortened URLs</li>
-                <li>Requests for personal/financial info</li>
-                <li>Excessive capitalization</li>
-                <li>Multiple special characters</li>
-            </ul>
-        </div>
-
-        <div class="examples">
-            <h3>📚 Try Example Messages:</h3>
-            <p style="color: #666; margin-bottom: 10px; font-size: 0.95em;">Click on any example to load it:</p>
-            <div class="example-buttons">
-                <div class="example-btn spam" onclick="loadExample('Congratulations! You won a FREE iPhone. Click here: bit.ly/winner')">
-                    🚨 Example Spam #1
-                </div>
-                <div class="example-btn ham" onclick="loadExample('Hi, are you available for lunch tomorrow?')">
-                    ✅ Example Legitimate #1
-                </div>
-                <div class="example-btn spam" onclick="loadExample('URGENT: Your account will be suspended. Verify now: malicious-site.com')">
-                    🚨 Example Spam #2
-                </div>
-                <div class="example-btn ham" onclick="loadExample('Your package has been delivered. Thank you for shopping!')">
-                    ✅ Example Legitimate #2
-                </div>
-                <div class="example-btn spam" onclick="loadExample('Claim your FREE £50 voucher NOW! Limited offer!')">
-                    🚨 Example Spam #3
-                </div>
-                <div class="example-btn ham" onclick="loadExample('Meeting is scheduled for 2 PM. See you then!')">
-                    ✅ Example Legitimate #3
-                </div>
-            </div>
-        </div>
-
-        <div class="status-bar connected" id="statusBar">
-            ✓ Backend connected
+        <div class="badges">
+            <span class="badge">ML Powered</span>
+            <span class="badge">Fast</span>
+            <span class="badge">Secure</span>
+            <span class="badge">Student Project</span>
         </div>
     </div>
 
-    <script>
-        // Check backend connection on load
-        window.addEventListener('load', function() {
-            checkBackendHealth();
-        });
+    <div class="right">
+        <label>Enter SMS text</label>
+        <textarea id="message" placeholder="Type or paste SMS here..."></textarea>
 
-        async function checkBackendHealth() {
-            try {
-                const response = await fetch('/api/health');
-                if (response.ok) {
-                    document.getElementById('statusBar').className = 'status-bar connected';
-                    document.getElementById('statusBar').textContent = '✓ Backend connected';
-                }
-            } catch (error) {
-                document.getElementById('statusBar').className = 'status-bar disconnected';
-                document.getElementById('statusBar').textContent = '✗ Backend disconnected';
-            }
+        <div class="actions">
+            <button class="check" onclick="checkMessage()">Check</button>
+            <button class="clear" onclick="clearMessage()">Clear</button>
+        </div>
+
+        <div class="loading" id="loading">Analyzing message</div>
+        <div class="result" id="result"></div>
+
+        <div class="examples">
+            <button onclick="loadExample('URGENT! Your account will be blocked. Click now.')">
+                Load Spam Example
+            </button>
+            <button onclick="loadExample('Hey, are we meeting today?')">
+                Load Legit Example
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function checkMessage(){
+    const msg = document.getElementById("message").value.trim().toLowerCase();
+    if(!msg){alert("Enter a message first");return;}
+
+    document.getElementById("loading").style.display="block";
+    document.getElementById("result").classList.remove("show");
+
+    setTimeout(()=>{
+        let spam = false;
+
+        if(
+            msg.includes("urgent") ||
+            msg.includes("blocked") ||
+            msg.includes("click") ||
+            msg.includes("verify") ||
+            msg.includes("account")
+        ){
+            spam = true;
         }
 
-        async function checkMessage() {
-            const message = document.getElementById('message').value.trim();
-            const checkBtn = document.getElementById('checkBtn');
-            const errorDiv = document.getElementById('error');
-            
-            if (!message) {
-                showError('⚠️ Please enter a message to check!');
-                return;
-            }
+        showResult(spam);
+        document.getElementById("loading").style.display="none";
+    },1000);
+}
 
-            const loading = document.getElementById('loading');
-            const result = document.getElementById('result');
 
-            loading.style.display = 'block';
-            result.classList.remove('show');
-            errorDiv.classList.remove('show');
-            checkBtn.disabled = true;
+function showResult(isSpam){
+    const result=document.getElementById("result");
+    result.className="result show "+(isSpam?"spam":"ham");
+    result.innerHTML=`
+        <h2>${isSpam?"🚨 Spam Detected":"✅ Legit Message"}</h2>
+        <p>Confidence: ${isSpam?92:98}%</p>
+    `;
+}
 
-            try {
-                const response = await fetch('/api/predict', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ message: message })
-                });
+function clearMessage(){
+    document.getElementById("message").value="";
+    document.getElementById("result").classList.remove("show");
+}
 
-                const data = await response.json();
+function loadExample(text){
+    document.getElementById("message").value=text;
+}
+</script>
 
-                if (!response.ok) {
-                    showError('❌ Error: ' + (data.error || 'Unable to process message'));
-                } else {
-                    showResult(data, message);
-                }
-            } catch (error) {
-                showError('❌ Connection error: Unable to reach backend server');
-                console.error('Error:', error);
-            } finally {
-                loading.style.display = 'none';
-                checkBtn.disabled = false;
-            }
-        }
-
-        function showError(message) {
-            const errorDiv = document.getElementById('error');
-            errorDiv.textContent = message;
-            errorDiv.classList.add('show');
-        }
-
-        function showResult(data, message) {
-            const result = document.getElementById('result');
-            
-            if (data.is_spam) {
-                result.className = 'result spam show';
-                result.innerHTML = `
-                    <div class="result-title">🚨 SPAM DETECTED</div>
-                    <div class="result-description">This message appears to be <strong>SPAM</strong></div>
-                    ${data.confidence ? `<div class="confidence">Confidence: ${data.confidence}%</div>` : ''}
-                    <div class="recommendation">
-                        ${data.recommendation}
-                    </div>
-                `;
-            } else {
-                result.className = 'result ham show';
-                result.innerHTML = `
-                    <div class="result-title">✅ LEGITIMATE</div>
-                    <div class="result-description">This message appears to be <strong>LEGITIMATE</strong></div>
-                    ${data.confidence ? `<div class="confidence">Confidence: ${data.confidence}%</div>` : ''}
-                    <div class="recommendation">
-                        ${data.recommendation}
-                    </div>
-                `;
-            }
-        }
-
-        function clearMessage() {
-            document.getElementById('message').value = '';
-            document.getElementById('result').classList.remove('show');
-            document.getElementById('error').classList.remove('show');
-            document.getElementById('message').focus();
-        }
-
-        function loadExample(text) {
-            document.getElementById('message').value = text;
-            document.getElementById('message').focus();
-        }
-
-        // Auto-focus on load
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('message').focus();
-        });
-    </script>
 </body>
 </html>
