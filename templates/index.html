@@ -188,24 +188,6 @@ button{
     margin-bottom:8px;
 }
 
-/* EXAMPLES */
-.examples{
-    margin-top:20px;
-}
-
-.examples button{
-    width:100%;
-    margin-top:8px;
-    background:#020617;
-    border:1px solid #1e293b;
-    color:#94a3b8;
-}
-
-.examples button:hover{
-    border-color:#38bdf8;
-    color:#e5e7eb;
-}
-
 /* TABLET */
 @media(max-width:900px){
     .wrapper{
@@ -254,6 +236,7 @@ button{
 
 <div class="wrapper">
 
+    <!-- LEFT -->
     <div class="left">
         <h1>📩 Spam Detection</h1>
         <p>
@@ -269,6 +252,7 @@ button{
         </div>
     </div>
 
+    <!-- RIGHT -->
     <div class="right">
         <label>Enter SMS text</label>
         <textarea id="message" placeholder="Type or paste SMS here..."></textarea>
@@ -280,62 +264,43 @@ button{
 
         <div class="loading" id="loading">Analyzing message</div>
         <div class="result" id="result"></div>
-
-        <div class="examples">
-            <button onclick="loadExample('URGENT! Your account will be blocked. Click now.')">
-                Load Spam Example
-            </button>
-            <button onclick="loadExample('Hey, are we meeting today?')">
-                Load Legit Example
-            </button>
-        </div>
     </div>
 
 </div>
 
 <script>
 function checkMessage(){
-    const msg = document.getElementById("message").value.trim().toLowerCase();
-    if(!msg){alert("Enter a message first");return;}
+    const msg = document.getElementById("message").value.trim();
+    if(!msg){
+        alert("Please enter an SMS message");
+        return;
+    }
 
     document.getElementById("loading").style.display="block";
     document.getElementById("result").classList.remove("show");
 
+    // DEMO LOGIC (replace with backend API later)
     setTimeout(()=>{
-        let spam = false;
+        const spamKeywords = ["urgent","blocked","verify","click","account","win","free"];
+        let isSpam = spamKeywords.some(word => msg.toLowerCase().includes(word));
 
-        if(
-            msg.includes("urgent") ||
-            msg.includes("blocked") ||
-            msg.includes("click") ||
-            msg.includes("verify") ||
-            msg.includes("account")
-        ){
-            spam = true;
-        }
-
-        showResult(spam);
+        showResult(isSpam);
         document.getElementById("loading").style.display="none";
     },1000);
 }
 
-
 function showResult(isSpam){
-    const result=document.getElementById("result");
-    result.className="result show "+(isSpam?"spam":"ham");
-    result.innerHTML=`
-        <h2>${isSpam?"🚨 Spam Detected":"✅ Legit Message"}</h2>
-        <p>Confidence: ${isSpam?92:98}%</p>
+    const result = document.getElementById("result");
+    result.className = "result show " + (isSpam ? "spam" : "ham");
+    result.innerHTML = `
+        <h2>${isSpam ? "🚨 Spam Detected" : "✅ Legit Message"}</h2>
+        <p>Confidence: ${isSpam ? 90 : 98}%</p>
     `;
 }
 
 function clearMessage(){
-    document.getElementById("message").value="";
+    document.getElementById("message").value = "";
     document.getElementById("result").classList.remove("show");
-}
-
-function loadExample(text){
-    document.getElementById("message").value=text;
 }
 </script>
 

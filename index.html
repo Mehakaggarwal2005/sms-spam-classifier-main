@@ -20,13 +20,13 @@ body{
     justify-content:center;
     align-items:center;
     color:#e5e7eb;
+    padding:20px;
 }
 
 /* MAIN WRAPPER */
 .wrapper{
-    width:95%;
+    width:100%;
     max-width:1100px;
-    min-height:600px;
     display:grid;
     grid-template-columns:1fr 1.3fr;
     border-radius:20px;
@@ -36,7 +36,7 @@ body{
 
 /* LEFT PANEL */
 .left{
-    background:linear-gradient(135deg,#1e3a8a,#0f172a);
+    background:linear-gradient(135deg,#1e3a8a,#020617);
     padding:50px;
     display:flex;
     flex-direction:column;
@@ -76,7 +76,6 @@ body{
     justify-content:center;
 }
 
-/* INPUT */
 label{
     font-size:1rem;
     margin-bottom:8px;
@@ -137,7 +136,7 @@ button{
     background:#334155;
 }
 
-/* LOADER */
+/* LOADING */
 .loading{
     display:none;
     text-align:center;
@@ -189,72 +188,21 @@ button{
     margin-bottom:8px;
 }
 
-/* EXAMPLES */
-.examples{
-    margin-top:20px;
-}
-
-.examples button{
-    width:100%;
-    margin-top:8px;
-    background:#020617;
-    border:1px solid #1e293b;
-    color:#94a3b8;
-}
-
-.examples button:hover{
-    border-color:#38bdf8;
-    color:#e5e7eb;
-}
-
-/* RESPONSIVE DESIGN */
-@media(max-width:768px){
+/* TABLET */
+@media(max-width:900px){
     .wrapper{
         grid-template-columns:1fr;
-        min-height:auto;
-        margin:20px auto;
     }
 
     .left{
-        padding:40px 30px;
-    }
-
-    .left h1{
-        font-size:2.2rem;
-    }
-
-    .left p{
-        font-size:1rem;
-    }
-
-    .right{
-        padding:30px;
-    }
-
-    textarea{
-        min-height:120px;
-    }
-
-    button{
-        padding:12px;
-        font-size:0.95rem;
-    }
-
-    .result h2{
-        font-size:1.2rem;
+        text-align:center;
     }
 }
 
+/* MOBILE */
 @media(max-width:480px){
     body{
-        min-height:auto;
-        padding:15px 0;
-    }
-
-    .wrapper{
-        width:100%;
-        border-radius:15px;
-        margin:20px auto;
+        padding:10px;
     }
 
     .left{
@@ -263,77 +211,22 @@ button{
 
     .left h1{
         font-size:1.8rem;
-        margin-bottom:12px;
     }
 
     .left p{
         font-size:0.95rem;
-        line-height:1.5;
-    }
-
-    .badge{
-        padding:6px 12px;
-        font-size:0.75rem;
-        margin:4px 4px 0 0;
     }
 
     .right{
         padding:20px;
     }
 
-    label{
-        font-size:0.9rem;
-    }
-
     textarea{
-        min-height:100px;
-        padding:12px;
-        font-size:0.95rem;
+        min-height:120px;
     }
 
     .actions{
         flex-direction:column;
-        gap:10px;
-    }
-
-    button{
-        padding:12px;
-        font-size:0.9rem;
-    }
-
-    .result{
-        padding:14px;
-        margin-top:10px;
-    }
-
-    .result h2{
-        font-size:1.1rem;
-        margin-bottom:6px;
-    }
-
-    .result p{
-        font-size:0.9rem;
-    }
-
-    .examples button{
-        padding:12px;
-        font-size:0.9rem;
-        margin-top:6px;
-    }
-}
-
-@media(max-width:360px){
-    .left h1{
-        font-size:1.5rem;
-    }
-
-    .left p{
-        font-size:0.9rem;
-    }
-
-    .badge{
-        padding:5px 10px;
-        font-size:0.7rem;
     }
 }
 </style>
@@ -347,14 +240,13 @@ button{
     <div class="left">
         <h1>📩 Spam Detection</h1>
         <p>
-            Detect unwanted SMS using Machine Learning.
-            This system analyzes message patterns and flags
-            suspicious or malicious content instantly.
+            Machine Learning based SMS spam detector.
+            Instantly identifies suspicious or malicious messages.
         </p>
 
         <div class="badges">
             <span class="badge">ML Powered</span>
-            <span class="badge">Real-Time</span>
+            <span class="badge">Fast</span>
             <span class="badge">Secure</span>
             <span class="badge">Student Project</span>
         </div>
@@ -371,48 +263,44 @@ button{
         </div>
 
         <div class="loading" id="loading">Analyzing message</div>
-
         <div class="result" id="result"></div>
-
-        <div class="examples">
-            <button onclick="loadExample('URGENT! Verify your account now or it will be blocked.')">Load Spam Example</button>
-            <button onclick="loadExample('Hey, I will call you in the evening.')">Load Legit Example</button>
-        </div>
     </div>
 
 </div>
 
 <script>
 function checkMessage(){
-    const msg=document.getElementById("message").value.trim();
-    if(!msg){alert("Enter a message first");return;}
+    const msg = document.getElementById("message").value.trim();
+    if(!msg){
+        alert("Please enter an SMS message");
+        return;
+    }
 
     document.getElementById("loading").style.display="block";
     document.getElementById("result").classList.remove("show");
 
+    // DEMO LOGIC (replace with backend API later)
     setTimeout(()=>{
-        const spam=Math.random()>0.5;
-        showResult(spam);
+        const spamKeywords = ["urgent","blocked","verify","click","account","win","free"];
+        let isSpam = spamKeywords.some(word => msg.toLowerCase().includes(word));
+
+        showResult(isSpam);
         document.getElementById("loading").style.display="none";
-    },1200);
+    },1000);
 }
 
 function showResult(isSpam){
-    const result=document.getElementById("result");
-    result.className="result show "+(isSpam?"spam":"ham");
-    result.innerHTML=`
-        <h2>${isSpam?"🚨 Spam Detected":"✅ Legit Message"}</h2>
-        <p>Confidence: ${isSpam?91:97}%</p>
+    const result = document.getElementById("result");
+    result.className = "result show " + (isSpam ? "spam" : "ham");
+    result.innerHTML = `
+        <h2>${isSpam ? "🚨 Spam Detected" : "✅ Legit Message"}</h2>
+        <p>Confidence: ${isSpam ? 90 : 98}%</p>
     `;
 }
 
 function clearMessage(){
-    document.getElementById("message").value="";
+    document.getElementById("message").value = "";
     document.getElementById("result").classList.remove("show");
-}
-
-function loadExample(text){
-    document.getElementById("message").value=text;
 }
 </script>
 
